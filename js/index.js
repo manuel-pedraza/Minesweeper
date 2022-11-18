@@ -5,19 +5,18 @@ const msGameContainer = document.getElementById("msGameContainer");
 
 
 const pBaseElement = document.createElement("p");
-pBaseElement.innerHTML = "0";
+pBaseElement.innerHTML = "?";
 pBaseElement.class = "grid-item";
 pBaseElement.style.fontSize = "1.5em";
 pBaseElement.style.marginLeft = "0px";
 pBaseElement.style.marginBottom = "0px";
 pBaseElement.style.marginTop = "0px";
 pBaseElement.style.marginRight = "0px";
-pBaseElement.style.color = "#fff";
 //pBaseElement.style.height =  `100%`;
 //pBaseElement.style.width = `100%`;
 pBaseElement.style.fontFamily = "Sans-Serif";
-pBaseElement.style.height = `20px`;
-pBaseElement.style.width = `66px`;
+pBaseElement.style.height = `40px`;
+pBaseElement.style.width = `40px`;
 pBaseElement.style.minWidth = `20px`;
 pBaseElement.style.textAlign = "center";
 pBaseElement.style.display = "table-cell";
@@ -25,8 +24,6 @@ pBaseElement.style.verticalAlign = "middle";
 pBaseElement.style.zIndex = "1";
 
 const trBaseElement = document.createElement("tr");
-
-
 
 class msGameLogic {
     
@@ -108,8 +105,9 @@ function appendBombs() {
                 
                 const squareValue = gameLogic.validateSquare(x, y);
                 
-                e.target.innerHTML = squareValue === false ? "💣" : squareValue;
+                e.target.innerHTML = squareValue === false ? "💣" : squareValue === 0 ? " " : squareValue;
 
+                e.target.classList.add("show");
             });
             
             trElement_tmp.append(pElement_tmp);

@@ -23,6 +23,26 @@ form div{
     margin: 6px 0;
 }
 
-.msGameContainer{
-    
+.msGameContainer tr p{
+    background-color: #aaa;
+    color: #000;
+    border: medium solid #000;
+    font-weight: bold;
+}
+
+.msGameContainer tr p.show  {
+    background-color: #ccc;
+    border: medium solid #222;
+    font-weight: bold;
+}
+
+.msGameContainer tr p.show:hover {
+    background-color: #444;
+    border: medium solid #222;
+    font-weight: bold;
+}
+
+.msGameContainer tr p:hover {
+    background-color: #444;
+    color: #fff;
 }

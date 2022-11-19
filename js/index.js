@@ -3,27 +3,11 @@ const numberRows = document.getElementById("numberRows");
 const btnCreateMinesList = document.getElementById("btnCreateMinesList");
 const msGameContainer = document.getElementById("msGameContainer");
 
-
+const trBaseElement = document.createElement("tr");
 const pBaseElement = document.createElement("p");
 pBaseElement.innerHTML = "?";
 pBaseElement.class = "grid-item";
-pBaseElement.style.fontSize = "1.5em";
-pBaseElement.style.marginLeft = "0px";
-pBaseElement.style.marginBottom = "0px";
-pBaseElement.style.marginTop = "0px";
-pBaseElement.style.marginRight = "0px";
-//pBaseElement.style.height =  `100%`;
-//pBaseElement.style.width = `100%`;
-pBaseElement.style.fontFamily = "Sans-Serif";
-pBaseElement.style.height = `40px`;
-pBaseElement.style.width = `40px`;
-pBaseElement.style.minWidth = `20px`;
-pBaseElement.style.textAlign = "center";
-pBaseElement.style.display = "table-cell";
-pBaseElement.style.verticalAlign = "middle";
-pBaseElement.style.zIndex = "1";
 
-const trBaseElement = document.createElement("tr");
 
 class msGameLogic {
     
@@ -98,14 +82,60 @@ function appendBombs() {
             const pElement_tmp = pBaseElement.cloneNode(true);
             
             pElement_tmp.id = "bomb-" + (i.toString() + "-" + j.toString());
+
+            pElement_tmp.addEventListener("contextmenu", e => e.preventDefault());
             pElement_tmp.addEventListener("mouseup", (e) =>{
+
+                switch (e.which) {
+                    case 1:
+                        
+                        break;
+                    case 3:
+                        if(!e.target.classList.contains("show"))
+                            e.target.innerHTML = e.target.innerHTML == "?" ? "🚩" : "?";
+                        return;
+                    default:
+                        return;
+                }
+
                 const id = e.target.id;
                 const x = id.substring(5, id.lastIndexOf("-"));
                 const y = id.substring(id.lastIndexOf("-") + 1);
-                
                 const squareValue = gameLogic.validateSquare(x, y);
                 
-                e.target.innerHTML = squareValue === false ? "💣" : squareValue === 0 ? " " : squareValue;
+                let color = "";
+                
+                e.target.innerHTML = squareValue === false ? "💥" : squareValue === 0 ? " " : squareValue;
+
+                switch (squareValue) {
+                    case 1:
+                        color = "#2222bb"
+                        break;
+                    case 2:
+                        color = "#22bb22"
+                        break;
+                    case 3:
+                        color = "#999900"
+                        break;
+                    case 4:
+                        color = "#aa22ff"
+                        break;
+                    case 5:
+                        color = "#ff6666"
+                        break;
+                    case 6:
+                        color = "#ff3333"
+                        break;
+                    case 7:
+                        color = "#ff6b00"
+                        break;
+                    case 8:
+                        color = "#222"
+                        break;
+                    default:
+                        break;
+                }
+                e.target.style.color = color;
 
                 e.target.classList.add("show");
             });

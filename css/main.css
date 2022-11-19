@@ -24,10 +24,21 @@ form div{
 }
 
 .msGameContainer tr p{
+    margin: 0;
+    font-size: 1.6em;
     background-color: #aaa;
     color: #000;
     border: medium solid #000;
     font-weight: bold;
+    font-family: "Sans-Serif";
+    height: 40px;
+    width: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    text-align: "center";
+    display: "table-cell";
+    vertical-align: "middle";
+    z-index: 1;
 }
 
 .msGameContainer tr p.show  {

@@ -13,7 +13,15 @@ class msGameLogic {
     constructor(params) {
         this.restartGame();
     }
-    
+
+    getMaxRows() {
+        return this.lstMines.length;
+    }
+
+    getMaxColumns() {
+        return this.lstMines[0].length;
+    }
+
     restartGame() {
         this.isGameOver = false;
         this.noBombZonesToDiscover = 0;
@@ -24,7 +32,7 @@ class msGameLogic {
     }
 
     addFlag(x, y) {
-        if(!this.lstMines[x][y])
+        if (!this.lstMines[x][y])
             this.bombsFlaged++;
 
         this.flagsPossibleInField--;
@@ -85,10 +93,10 @@ class msGameLogic {
     }
 
     validateSquare(x, y) {
-        if (!this.lstMines[x][y]){
+        if (!this.lstMines[x][y]) {
             this.bombsExploded++;
             this.isGameOver = true;
-        }else{
+        } else {
             this.noBombZonesToDiscover--;
         }
 
@@ -98,11 +106,12 @@ class msGameLogic {
 
 let gameLogic = new msGameLogic();
 
-function revealBombSquare(element){
-    if (element === undefined || !element.classList.contains("bombSquare") || element.classList.contains("show")) 
+function revealBombSquare(element) {
+
+    if (element === null || !element.classList.contains("bombSquare") || element.classList.contains("show"))
         return;
-    
-    const x = element.x, y = element.y;
+
+    const x = element.x, y = element.y, maxX = gameLogic.getMaxRows(), maxY = gameLogic.getMaxColumns();
     const squareValue = gameLogic.validateSquare(x, y);
 
     let color = "";
@@ -110,9 +119,6 @@ function revealBombSquare(element){
     element.innerHTML = squareValue === false ? "💥" : squareValue === 0 ? " " : squareValue;
 
     switch (squareValue) {
-        case 0:
-            // Code to reveal all the other squares
-            break;
         case 1:
             color = "#2222bb"
             break;
@@ -140,17 +146,31 @@ function revealBombSquare(element){
         default:
             break;
     }
+
     element.style.color = color;
     element.classList.add("show");
+
+    if (squareValue === 0) {
+        for (let i = -1; i < 2; i++)
+            for (let j = -1; j < 2; j++) {
+                if (i == 0 && j == 0 ||
+                    x + i < 0 || x + i >= maxX ||
+                    y + j < 0 || y + j >= maxY)
+                    continue;
+
+                revealBombSquare(document.getElementById("bomb-" + ((x + i).toString() + "-" + (y + j).toString())));
+
+            }
+    }
 }
 
 function appendBombs() {
     msGameContainer.innerHTML = "";
-    for (let i = 0; i < gameLogic.lstMines.length; i++) {
+    for (let i = 0; i < gameLogic.getMaxRows(); i++) {
 
         const trElement_tmp = trBaseElement.cloneNode(true);
 
-        for (let j = 0; j < gameLogic.lstMines[0].length; j++) {
+        for (let j = 0; j < gameLogic.getMaxColumns(); j++) {
             const pElement_tmp = pBaseElement.cloneNode(true);
 
             pElement_tmp.id = "bomb-" + (i.toString() + "-" + j.toString());
@@ -162,7 +182,7 @@ function appendBombs() {
             pElement_tmp.addEventListener("mouseup", (e) => {
 
                 // if(gameLogic.isGameOver)
-                    // return;
+                // return;
 
                 const id = e.target.id;
                 // const x = id.substring(5, id.lastIndexOf("-"));
@@ -207,11 +227,11 @@ btnCreateMinesList.addEventListener("click", (e) => {
 });
 
 numberColumns.addEventListener("change", (e) => {
-    if (numberColumns.value < 4)
-        numberColumns.value = "4";
+    if (numberColumns.value < 8)
+        numberColumns.value = "8";
 });
 
 numberRows.addEventListener("change", (e) => {
-    if (numberRows.value < 4)
-        numberRows.value = "4";
+    if (numberRows.value < 8)
+        numberRows.value = "8";
 });

@@ -30,14 +30,13 @@ form div{
     color: #000;
     border: medium solid #000;
     font-weight: bold;
-    font-family: "Sans-Serif";
     height: 40px;
     width: 40px;
     min-width: 40px;
     min-height: 40px;
     text-align: "center";
-    display: "table-cell";
     vertical-align: "middle";
+    display: table-cell;
     z-index: 1;
 }
 

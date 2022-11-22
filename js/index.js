@@ -6,12 +6,18 @@ const msGameContainer = document.getElementById("msGameContainer");
 const trBaseElement = document.createElement("tr");
 const pBaseElement = document.createElement("p");
 pBaseElement.innerHTML = "?";
-pBaseElement.class = "grid-item";
 
 class msGameLogic {
 
     constructor(params) {
         this.restartGame();
+    }
+
+    validateIfGameHasEnded(){
+        if (this.noBombZonesToDiscover === 0 && this.flagsPossibleInField === 0 && 
+            this.bombsFlaged + this.bombsExploded === this.totalNumberOfBombs) {
+            this.isGameOver = true;
+        }
     }
 
     getMaxRows() {
@@ -24,6 +30,7 @@ class msGameLogic {
 
     restartGame() {
         this.isGameOver = false;
+        this.isFlawlessVictory = true;
         this.noBombZonesToDiscover = 0;
         this.totalNumberOfBombs = 0;
         this.flagsPossibleInField = 0;
@@ -36,6 +43,8 @@ class msGameLogic {
             this.bombsFlaged++;
 
         this.flagsPossibleInField--;
+
+        this.validateIfGameHasEnded();
     }
 
     removeFlag(x, y) {
@@ -62,7 +71,6 @@ class msGameLogic {
             }
         }
 
-        console.log("Total number of bombs: " + this.totalNumberOfBombs);
         this.flagsPossibleInField = this.totalNumberOfBombs;
         let numberOfBombs = 0;
 
@@ -92,13 +100,22 @@ class msGameLogic {
             }
     }
 
+    canRevealSquare(x, y) {
+        return this.lstMines[x][y] !== false;
+    }
+
     validateSquare(x, y) {
-        if (!this.lstMines[x][y]) {
+
+        if (this.lstMines[x][y] === false) {
             this.bombsExploded++;
-            this.isGameOver = true;
+            this.isFlawlessVictory = false;
+            this.flagsPossibleInField--;
+            
         } else {
             this.noBombZonesToDiscover--;
         }
+
+        this.validateIfGameHasEnded();
 
         return this.lstMines[x][y];
     }
@@ -106,19 +123,37 @@ class msGameLogic {
 
 let gameLogic = new msGameLogic();
 
+function recRevealBombSquare(x, y) {
+
+    if (gameLogic.canRevealSquare(x, y))
+        revealBombSquare(document.getElementById("bomb-" + ((x).toString() + "-" + (y).toString())));
+    else
+        return;
+
+}
+
 function revealBombSquare(element) {
 
     if (element === null || !element.classList.contains("bombSquare") || element.classList.contains("show"))
         return;
 
     const x = element.x, y = element.y, maxX = gameLogic.getMaxRows(), maxY = gameLogic.getMaxColumns();
+
     const squareValue = gameLogic.validateSquare(x, y);
 
     let color = "";
 
-    element.innerHTML = squareValue === false ? "💥" : squareValue === 0 ? " " : squareValue;
+    element.innerHTML = squareValue;
 
     switch (squareValue) {
+        case false:
+            element.innerHTML = "💥";
+            console.log("🚩" + gameLogic.flagsPossibleInField);
+
+            break;
+        case 0:
+            element.innerHTML = " ";
+            break;
         case 1:
             color = "#2222bb"
             break;
@@ -150,7 +185,7 @@ function revealBombSquare(element) {
     element.style.color = color;
     element.classList.add("show");
 
-    if (squareValue === 0) {
+    if (squareValue === 0)
         for (let i = -1; i < 2; i++)
             for (let j = -1; j < 2; j++) {
                 if (i == 0 && j == 0 ||
@@ -158,10 +193,9 @@ function revealBombSquare(element) {
                     y + j < 0 || y + j >= maxY)
                     continue;
 
-                revealBombSquare(document.getElementById("bomb-" + ((x + i).toString() + "-" + (y + j).toString())));
+                recRevealBombSquare(x + i, y + j);
 
             }
-    }
 }
 
 function appendBombs() {
@@ -181,8 +215,8 @@ function appendBombs() {
             pElement_tmp.addEventListener("contextmenu", e => e.preventDefault());
             pElement_tmp.addEventListener("mouseup", (e) => {
 
-                // if(gameLogic.isGameOver)
-                // return;
+                if (gameLogic.isGameOver)
+                    return;
 
                 const id = e.target.id;
                 // const x = id.substring(5, id.lastIndexOf("-"));
@@ -206,11 +240,14 @@ function appendBombs() {
                         else if (e.target.innerHTML == "🚩")
                             gameLogic.addFlag(x, y);
 
-                        return;
+                        console.log("🚩" + gameLogic.flagsPossibleInField);
+                        break
                     default:
                         return;
                 }
 
+
+                // Add smth
             });
 
             trElement_tmp.append(pElement_tmp);
@@ -224,6 +261,8 @@ btnCreateMinesList.addEventListener("click", (e) => {
     gameLogic.restartGame();
     gameLogic.initMineList(numberRows.value, numberColumns.value);
     appendBombs();
+    console.log("🚩" + gameLogic.flagsPossibleInField);
+
 });
 
 numberColumns.addEventListener("change", (e) => {

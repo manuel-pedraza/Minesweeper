@@ -56,3 +56,8 @@ form div{
     background-color: #444;
     color: #fff;
 }
+
+.p-show-infos{
+    font-size: 2em;
+    display: inline-block;
+}

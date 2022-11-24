@@ -2,6 +2,8 @@ const numberColumns = document.getElementById("numberColumns");
 const numberRows = document.getElementById("numberRows");
 const btnCreateMinesList = document.getElementById("btnCreateMinesList");
 const msGameContainer = document.getElementById("msGameContainer");
+const pFlagsPossibles = document.getElementById("flagsPossibles");
+const pBombsExploded = document.getElementById("bombsExploded");
 
 const trBaseElement = document.createElement("tr");
 const pBaseElement = document.createElement("p");
@@ -148,7 +150,8 @@ function revealBombSquare(element) {
     switch (squareValue) {
         case false:
             element.innerHTML = "💥";
-            console.log("🚩" + gameLogic.flagsPossibleInField);
+            pFlagsPossibles.innerHTML = gameLogic.flagsPossibleInField;
+            pBombsExploded.innerHTML = gameLogic.bombsExploded;
 
             break;
         case 0:
@@ -240,7 +243,8 @@ function appendBombs() {
                         else if (e.target.innerHTML == "🚩")
                             gameLogic.addFlag(x, y);
 
-                        console.log("🚩" + gameLogic.flagsPossibleInField);
+                        pFlagsPossibles.innerHTML = gameLogic.flagsPossibleInField;
+
                         break
                     default:
                         return;
@@ -261,7 +265,8 @@ btnCreateMinesList.addEventListener("click", (e) => {
     gameLogic.restartGame();
     gameLogic.initMineList(numberRows.value, numberColumns.value);
     appendBombs();
-    console.log("🚩" + gameLogic.flagsPossibleInField);
+    pFlagsPossibles.innerHTML = gameLogic.flagsPossibleInField;
+
 
 });
 

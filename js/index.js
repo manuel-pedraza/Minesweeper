@@ -15,8 +15,8 @@ class msGameLogic {
         this.restartGame();
     }
 
-    validateIfGameHasEnded(){
-        if (this.noBombZonesToDiscover === 0 && this.flagsPossibleInField === 0 && 
+    validateIfGameHasEnded() {
+        if (this.noBombZonesToDiscover === 0 && this.flagsPossibleInField === 0 &&
             this.bombsFlaged + this.bombsExploded === this.totalNumberOfBombs) {
             this.isGameOver = true;
         }
@@ -112,7 +112,7 @@ class msGameLogic {
             this.bombsExploded++;
             this.isFlawlessVictory = false;
             this.flagsPossibleInField--;
-            
+
         } else {
             this.noBombZonesToDiscover--;
         }
@@ -127,8 +127,15 @@ let gameLogic = new msGameLogic();
 
 function recRevealBombSquare(x, y) {
 
-    if (gameLogic.canRevealSquare(x, y))
-        revealBombSquare(document.getElementById("bomb-" + ((x).toString() + "-" + (y).toString())));
+    if (gameLogic.canRevealSquare(x, y)) {
+        const element = document.getElementById("bomb-" + ((x).toString() + "-" + (y).toString()));
+        if (element.innerHTML === "🚩"){
+            gameLogic.removeFlag(x, y);
+            pFlagsPossibles.innerHTML = gameLogic.flagsPossibleInField;
+        }
+
+        revealBombSquare(element);
+    }
     else
         return;
 
@@ -144,6 +151,8 @@ function revealBombSquare(element) {
     const squareValue = gameLogic.validateSquare(x, y);
 
     let color = "";
+
+
 
     element.innerHTML = squareValue;
 
@@ -266,7 +275,7 @@ btnCreateMinesList.addEventListener("click", (e) => {
     gameLogic.initMineList(numberRows.value, numberColumns.value);
     appendBombs();
     pFlagsPossibles.innerHTML = gameLogic.flagsPossibleInField;
-
+    pBombsExploded.innerHTML = gameLogic.bombsExploded;
 
 });
 

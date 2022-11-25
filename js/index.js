@@ -68,7 +68,7 @@ class msGameLogic {
             this.lstMines.push([]);
 
             for (let j = 0; j < y; j++) {
-                let isBomb = Math.round(Math.random() * 100) < 75;
+                let isBomb = Math.round(Math.random() * 100) < 80;
                 this.lstMines[i].push(isBomb);
 
                 if (isBomb)
@@ -131,42 +131,59 @@ class msGameLogic {
 
 let gameLogic = new msGameLogic();
 
+function canSquareRemoveFlag(element) {
+    if (element === null || !element.classList.contains("bombSquare") || element.classList.contains("show"))
+        return undefined;
+
+    const x = element.x, y = element.y;
+
+    if (element.innerHTML === "🚩") {
+        if (gameLogic.canRevealSquare(x, y)) {
+            gameLogic.removeFlag(x, y);
+            pFlagsPossibles.innerHTML = gameLogic.flagsPossibleInField;
+            element.innerHTML = "?";
+
+
+            return true;
+        } else if (!gameLogic.canRevealSquare(x, y))
+            return false;
+    }else
+        return undefined;
+}
+
 function recRevealBombSquare(x, y) {
 
     if (gameLogic.canRevealSquare(x, y)) {
         const element = document.getElementById("bomb-" + ((x).toString() + "-" + (y).toString()));
-        if (element.innerHTML === "🚩") {
-            gameLogic.removeFlag(x, y);
-            pFlagsPossibles.innerHTML = gameLogic.flagsPossibleInField;
-        }
-
+        canSquareRemoveFlag(element);
         revealBombSquare(element);
     }
     else
         return;
-
 }
 
 function revealBombSquare(element) {
 
-    if (element === null || !element.classList.contains("bombSquare") || element.classList.contains("show"))
+    if (element === null || !element.classList.contains("bombSquare") || element.classList.contains("show") || 
+        canSquareRemoveFlag(element) === false)
         return;
 
-    const x = element.x, y = element.y, maxX = gameLogic.getMaxRows(), maxY = gameLogic.getMaxColumns();
+    const x = element.x, y = element.y;
+
+    if (gameLogic.isGameOver === true && !gameLogic.canRevealSquare(x, y)) {
+        element.innerHTML = "💣";
+        return;
+    }
 
     const squareValue = gameLogic.validateSquare(x, y);
 
     let color = "";
 
+
     element.innerHTML = squareValue;
 
     switch (squareValue) {
         case false:
-            if(gameLogic.isGameOver === true){
-                element.innerHTML = "💣";
-                break;
-            }
-            
             element.innerHTML = "💥";
             pFlagsPossibles.innerHTML = gameLogic.flagsPossibleInField;
             pBombsExploded.innerHTML = gameLogic.bombsExploded;
@@ -191,13 +208,13 @@ function revealBombSquare(element) {
             color = "#aa22ff"
             break;
         case 5:
-            color = "#ff6666"
+            color = "#ff2222"
             break;
         case 6:
-            color = "#ff3333"
+            color = "#00cccc"
             break;
         case 7:
-            color = "#ff6b00"
+            color = "#cc4400"
             break;
         case 8:
             color = "#222"
@@ -209,7 +226,9 @@ function revealBombSquare(element) {
     element.style.color = color;
     element.classList.add("show");
 
-    if (squareValue === 0)
+    if (squareValue === 0) {
+        const maxX = gameLogic.getMaxRows(), maxY = gameLogic.getMaxColumns();
+
         for (let i = -1; i < 2; i++)
             for (let j = -1; j < 2; j++) {
                 if (i == 0 && j == 0 ||
@@ -220,6 +239,7 @@ function revealBombSquare(element) {
                 recRevealBombSquare(x + i, y + j);
 
             }
+    }
 }
 
 function appendBombs() {
@@ -250,9 +270,6 @@ function appendBombs() {
 
                 switch (e.which) {
                     case 1:
-                        if (e.target.innerHTML == "🚩")
-                            return
-
                         revealBombSquare(e.target);
                         break;
                     case 3:
@@ -306,13 +323,13 @@ function removePopOff() {
 }
 
 function showAllGame() {
-
     if (!gameLogic.isGameOver)
         return;
 
     for (let i = 0; i < gameLogic.getMaxRows(); i++)
         for (let j = 0; j < gameLogic.getMaxColumns(); j++)
             revealBombSquare(document.getElementById("bomb-" + ((i).toString() + "-" + (j).toString())));
+
 }
 
 btnContinue.addEventListener("click", e => {

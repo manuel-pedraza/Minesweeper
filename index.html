@@ -10,6 +10,19 @@
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
+
+    <div id="game-state-pop-off">
+        <div id="box-container">
+            <p id="text-info">
+                You lost! <br/>
+                Do you want to continue playing?
+            </p>
+            <button id="btnContinue" style="width: 35%;" type="button" class="btn btn-success">Yes</button>
+            <button id="btnEndGame" style="width: 35%;" type="button" class="btn btn-danger">No</button>
+        </div>
+    </div>
+
+    <!--  -->
     
     <div class="container-fluid msMainContainer" >
         <div class="row" style="height: 10%; align-items: center; align-content: center;">
@@ -51,16 +64,14 @@
         </div>
 
         <div class="row">
-            <div class="col-md-3"></div>
-            <div class="col-md-3">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-6">
                 <p class="p-show-infos">🚩</p>
                 <p class="p-show-infos" id="flagsPossibles">0</p>
-            </div>
-            <div class="col-md-3">
-                <p class="p-show-infos">💥</p>
+                <p class="p-show-infos" style="margin-left: 20px;">💥</p>
                 <p class="p-show-infos" id="bombsExploded">0</p>
             </div>
-            <div class="col-md-3"></div>
+            <div class="col-sm-3"></div>
         </div>
 
         <div class="row flex-grow-1 justify-content-center">

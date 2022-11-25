@@ -1,14 +1,20 @@
+// Element that will be used
 const numberColumns = document.getElementById("numberColumns");
 const numberRows = document.getElementById("numberRows");
 const btnCreateMinesList = document.getElementById("btnCreateMinesList");
 const msGameContainer = document.getElementById("msGameContainer");
 const pFlagsPossibles = document.getElementById("flagsPossibles");
 const pBombsExploded = document.getElementById("bombsExploded");
+const divPopOff = document.getElementById("game-state-pop-off");
+const btnContinue = document.getElementById("btnContinue");
+const btnEndGame = document.getElementById("btnEndGame");
 
+// New Elements
 const trBaseElement = document.createElement("tr");
 const pBaseElement = document.createElement("p");
 pBaseElement.innerHTML = "?";
 
+// Main game class logic
 class msGameLogic {
 
     constructor(params) {
@@ -129,7 +135,7 @@ function recRevealBombSquare(x, y) {
 
     if (gameLogic.canRevealSquare(x, y)) {
         const element = document.getElementById("bomb-" + ((x).toString() + "-" + (y).toString()));
-        if (element.innerHTML === "🚩"){
+        if (element.innerHTML === "🚩") {
             gameLogic.removeFlag(x, y);
             pFlagsPossibles.innerHTML = gameLogic.flagsPossibleInField;
         }
@@ -152,15 +158,21 @@ function revealBombSquare(element) {
 
     let color = "";
 
-
-
     element.innerHTML = squareValue;
 
     switch (squareValue) {
         case false:
+            if(gameLogic.isGameOver === true){
+                element.innerHTML = "💣";
+                break;
+            }
+            
             element.innerHTML = "💥";
             pFlagsPossibles.innerHTML = gameLogic.flagsPossibleInField;
             pBombsExploded.innerHTML = gameLogic.bombsExploded;
+
+            if (gameLogic.bombsExploded === 1)
+                divPopOff.classList.add("show");
 
             break;
         case 0:
@@ -287,4 +299,28 @@ numberColumns.addEventListener("change", (e) => {
 numberRows.addEventListener("change", (e) => {
     if (numberRows.value < 8)
         numberRows.value = "8";
+});
+
+function removePopOff() {
+    divPopOff.classList.remove("show");
+}
+
+function showAllGame() {
+
+    if (!gameLogic.isGameOver)
+        return;
+
+    for (let i = 0; i < gameLogic.getMaxRows(); i++)
+        for (let j = 0; j < gameLogic.getMaxColumns(); j++)
+            revealBombSquare(document.getElementById("bomb-" + ((i).toString() + "-" + (j).toString())));
+}
+
+btnContinue.addEventListener("click", e => {
+    removePopOff();
+});
+
+btnEndGame.addEventListener("click", e => {
+    gameLogic.isGameOver = true;
+    removePopOff();
+    showAllGame();
 });

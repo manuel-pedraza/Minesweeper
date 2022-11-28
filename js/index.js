@@ -69,7 +69,7 @@ class msGameLogic {
             this.lstMines.push([]);
 
             for (let j = 0; j < y; j++) {
-                let isBomb = Math.round(Math.random() * 100) < 20;
+                let isBomb = Math.round(Math.random() * 100) < 80;
                 this.lstMines[i].push(isBomb);
 
                 if (isBomb)
@@ -82,14 +82,68 @@ class msGameLogic {
         this.flagsPossibleInField = this.totalNumberOfBombs;
     }
 
-    setFirstRevealOfBombs(x, y){
-        if(this.isFirstReveal !== true)
+    setFirstRevealOfBombs(x, y) {
+        if (this.isFirstReveal !== true)
             return
-        
-        // Code here
-        let spacesToShow = 12;
-        
 
+        let bombsToPlace = 0;
+
+        for (let i = -1; i <= 1; i++)
+            for (let j = -1; j <= 1; j++) {
+                if (x + i < 0 || x + i >= this.getMaxRows() ||
+                    y + j < 0 || y + j >= this.getMaxColumns())
+                    continue;
+
+                if (this.lstMines[x + i][y + j] === false) {
+                    bombsToPlace++;
+                    this.lstMines[x + i][y + j] = true;
+                }
+            }
+
+        let buffer = 2;
+        let iLimit = buffer;
+        let jLimit = buffer * -1;
+
+        while (bombsToPlace > 0) {
+            let timesInLoop = 2;
+            let change = 1;
+
+            while (bombsToPlace > 0 && timesInLoop > 0) {
+
+
+                for (let i = iLimit * -1; i <= iLimit; i = i + change) {
+                    if (x + i < 0 || x + i >= this.getMaxRows() ||
+                        y + jLimit < 0 || y + jLimit >= this.getMaxColumns())
+                        continue;
+
+                    if (this.lstMines[x + i][y + jLimit] === true) {
+                        bombsToPlace--;
+                        this.lstMines[x + i][y + jLimit] = true;
+                    }
+                }
+
+                iLimit *= -1;
+
+                for (let j = jLimit * -1; j <= jLimit; j = j + change * -1) {
+                    if (x + iLimit < 0 || x + iLimit >= this.getMaxRows() ||
+                        y + j < 0 || y + j >= this.getMaxColumns())
+                        continue;
+
+                    if (this.lstMines[x + iLimit][y + j] === true) {
+                        bombsToPlace--;
+                        this.lstMines[x + iLimit][y + j] = true;
+                    }
+                }
+
+                jLimit *= -1;
+                change *= -1;
+                timesInLoop--;
+            }
+
+            buffer++;
+            iLimit = buffer;
+            jLimit = buffer * -1;
+        }
         this.isFirstReveal = false;
     }
 
@@ -276,9 +330,9 @@ function appendBombs() {
                 switch (e.which) {
                     case 1:
 
-                        if(gameLogic.isFirstReveal)
+                        if (gameLogic.isFirstReveal)
                             gameLogic.setFirstRevealOfBombs(x, y);
-                        
+
                         revealBombSquare(e.target);
                         break;
                     case 3:

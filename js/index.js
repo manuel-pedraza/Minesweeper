@@ -38,6 +38,7 @@ class msGameLogic {
 
     restartGame() {
         this.isGameOver = false;
+        this.isFirstReveal = true;
         this.isFlawlessVictory = true;
         this.noBombZonesToDiscover = 0;
         this.totalNumberOfBombs = 0;
@@ -68,44 +69,48 @@ class msGameLogic {
             this.lstMines.push([]);
 
             for (let j = 0; j < y; j++) {
-                let isBomb = Math.round(Math.random() * 100) < 80;
+                let isBomb = Math.round(Math.random() * 100) < 20;
                 this.lstMines[i].push(isBomb);
 
                 if (isBomb)
                     this.noBombZonesToDiscover++;
                 else
                     this.totalNumberOfBombs++;
-
             }
         }
 
         this.flagsPossibleInField = this.totalNumberOfBombs;
+    }
+
+    setFirstRevealOfBombs(x, y){
+        if(this.isFirstReveal !== true)
+            return
+        
+        // Code here
+        let spacesToShow = 12;
+        
+
+        this.isFirstReveal = false;
+    }
+
+    setNumberSquare(x, y) {
+        if (this.lstMines[x][y] !== true)
+            return;
+
         let numberOfBombs = 0;
 
-        for (let i = 0; i < x; i++)
-            for (let j = 0; j < y; j++) {
-
-                // console.log(" X: " + i + " Y: " +j + " Value: " + lstMines[i][j]);
-
-                if (!this.lstMines[i][j])
+        for (let i = -1; i <= 1; i++)
+            for (let j = -1; j <= 1; j++) {
+                if (i == 0 && j == 0 ||
+                    x + i < 0 || x + i >= this.getMaxRows() ||
+                    y + j < 0 || y + j >= this.getMaxColumns())
                     continue;
 
-                numberOfBombs = 0;
-
-                for (let iNewPos = -1; iNewPos <= 1; iNewPos++)
-                    for (let jNewPos = -1; jNewPos <= 1; jNewPos++) {
-                        if (iNewPos == 0 && jNewPos == 0 ||
-                            i + iNewPos < 0 || i + iNewPos >= x ||
-                            j + jNewPos < 0 || j + jNewPos >= y)
-                            continue;
-
-                        if (this.lstMines[i + iNewPos][j + jNewPos] === false)
-                            numberOfBombs++;
-
-                    }
-
-                this.lstMines[i][j] = numberOfBombs;
+                if (this.lstMines[x + i][y + j] === false)
+                    numberOfBombs++;
             }
+
+        this.lstMines[x][y] = numberOfBombs;
     }
 
     canRevealSquare(x, y) {
@@ -147,7 +152,7 @@ function canSquareRemoveFlag(element) {
             return true;
         } else if (!gameLogic.canRevealSquare(x, y))
             return false;
-    }else
+    } else
         return undefined;
 }
 
@@ -164,11 +169,13 @@ function recRevealBombSquare(x, y) {
 
 function revealBombSquare(element) {
 
-    if (element === null || !element.classList.contains("bombSquare") || element.classList.contains("show") || 
+    if (element === null || !element.classList.contains("bombSquare") || element.classList.contains("show") ||
         canSquareRemoveFlag(element) === false)
         return;
 
     const x = element.x, y = element.y;
+
+    gameLogic.setNumberSquare(x, y);
 
     if (gameLogic.isGameOver === true && !gameLogic.canRevealSquare(x, y)) {
         element.innerHTML = "💣";
@@ -178,8 +185,6 @@ function revealBombSquare(element) {
     const squareValue = gameLogic.validateSquare(x, y);
 
     let color = "";
-
-
     element.innerHTML = squareValue;
 
     switch (squareValue) {
@@ -270,6 +275,10 @@ function appendBombs() {
 
                 switch (e.which) {
                     case 1:
+
+                        if(gameLogic.isFirstReveal)
+                            gameLogic.setFirstRevealOfBombs(x, y);
+                        
                         revealBombSquare(e.target);
                         break;
                     case 3:

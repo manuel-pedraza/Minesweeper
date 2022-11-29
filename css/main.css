@@ -38,12 +38,14 @@ form div{
     vertical-align: "middle";
     display: table-cell;
     z-index: 1;
+    cursor: pointer;
 }
 
 .msGameContainer tr p.show  {
     background-color: #ccc;
     border: medium solid #222;
     font-weight: bold;
+    cursor: default;
 }
 
 .msGameContainer tr p.show:hover {

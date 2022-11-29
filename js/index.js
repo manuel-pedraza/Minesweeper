@@ -111,27 +111,27 @@ class msGameLogic {
             while (bombsToPlace > 0 && timesInLoop > 0) {
 
 
-                for (let i = iLimit * -1; i <= iLimit; i = i + change) {
+                for (let i = iLimit * -1; i <= iLimit && bombsToPlace > 0; i = i + change) {
                     if (x + i < 0 || x + i >= this.getMaxRows() ||
                         y + jLimit < 0 || y + jLimit >= this.getMaxColumns())
                         continue;
 
                     if (this.lstMines[x + i][y + jLimit] === true) {
                         bombsToPlace--;
-                        this.lstMines[x + i][y + jLimit] = true;
+                        this.lstMines[x + i][y + jLimit] = false;
                     }
                 }
 
                 iLimit *= -1;
 
-                for (let j = jLimit * -1; j <= jLimit; j = j + change * -1) {
+                for (let j = jLimit * -1; j <= jLimit && bombsToPlace > 0; j = j + change * -1) {
                     if (x + iLimit < 0 || x + iLimit >= this.getMaxRows() ||
                         y + j < 0 || y + j >= this.getMaxColumns())
                         continue;
 
                     if (this.lstMines[x + iLimit][y + j] === true) {
                         bombsToPlace--;
-                        this.lstMines[x + iLimit][y + j] = true;
+                        this.lstMines[x + iLimit][y + j] = false;
                     }
                 }
 
@@ -144,6 +144,7 @@ class msGameLogic {
             iLimit = buffer;
             jLimit = buffer * -1;
         }
+
         this.isFirstReveal = false;
     }
 
@@ -330,8 +331,11 @@ function appendBombs() {
                 switch (e.which) {
                     case 1:
 
-                        if (gameLogic.isFirstReveal)
+                        if (gameLogic.isFirstReveal){
                             gameLogic.setFirstRevealOfBombs(x, y);
+                            pFlagsPossibles.innerHTML = gameLogic.flagsPossibleInField;
+
+                        }
 
                         revealBombSquare(e.target);
                         break;

@@ -16,24 +16,19 @@ pBaseElement.innerHTML = "?";
 
 // Main game class logic
 class msGameLogic {
-
-    constructor(params) {
-        this.restartGame();
-    }
+    constructor(params) { this.restartGame(); }
+    getMaxRows() { return this.lstMines.length; }
+    getMaxColumns() { return this.lstMines[0].length; }
+    canRevealSquare(x, y) { return this.lstMines[x][y] !== false; }
 
     validateIfGameHasEnded() {
         if (this.noBombZonesToDiscover === 0 && this.flagsPossibleInField === 0 &&
             this.bombsFlaged + this.bombsExploded === this.totalNumberOfBombs) {
             this.isGameOver = true;
+
+            if (this.isFlawlessVictory === true && this.funFlawless !== undefined)
+                setTimeout(this.funFlawless, 1000);
         }
-    }
-
-    getMaxRows() {
-        return this.lstMines.length;
-    }
-
-    getMaxColumns() {
-        return this.lstMines[0].length;
     }
 
     restartGame() {
@@ -45,6 +40,7 @@ class msGameLogic {
         this.flagsPossibleInField = 0;
         this.bombsExploded = 0;
         this.bombsFlaged = 0;
+        this.funFlawless = undefined;
     }
 
     addFlag(x, y) {
@@ -69,7 +65,7 @@ class msGameLogic {
             this.lstMines.push([]);
 
             for (let j = 0; j < y; j++) {
-                let isBomb = Math.round(Math.random() * 100) < 80;
+                let isBomb = Math.round(Math.random() * 100) < 84;
                 this.lstMines[i].push(isBomb);
 
                 if (isBomb)
@@ -78,7 +74,6 @@ class msGameLogic {
                     this.totalNumberOfBombs++;
             }
         }
-
         this.flagsPossibleInField = this.totalNumberOfBombs;
     }
 
@@ -109,7 +104,6 @@ class msGameLogic {
             let change = 1;
 
             while (bombsToPlace > 0 && timesInLoop > 0) {
-
 
                 for (let i = iLimit * -1; i <= iLimit && bombsToPlace > 0; i = i + change) {
                     if (x + i < 0 || x + i >= this.getMaxRows() ||
@@ -168,10 +162,6 @@ class msGameLogic {
         this.lstMines[x][y] = numberOfBombs;
     }
 
-    canRevealSquare(x, y) {
-        return this.lstMines[x][y] !== false;
-    }
-
     validateSquare(x, y) {
 
         if (this.lstMines[x][y] === false) {
@@ -184,12 +174,41 @@ class msGameLogic {
         }
 
         this.validateIfGameHasEnded();
-
         return this.lstMines[x][y];
     }
 }
 
 let gameLogic = new msGameLogic();
+
+function addClassFlawlessToSquare({x, y}) {
+    const element = document.getElementById("bomb-" + ((x).toString() + "-" + (y).toString()));
+    element.classList.add("flawless");
+}
+
+function flawlessVictoryAnimation() {
+    let lstMinesTmp = [];
+
+    for (let i = 0; i < gameLogic.getMaxRows(); i++)
+        for (let j = 0; j < gameLogic.getMaxColumns(); j++)
+            if (gameLogic.lstMines[i][j] === false || gameLogic.lstMines[i][j] === true)
+                continue;
+            else
+                lstMinesTmp.push({ x: i, y: j });
+
+    let addClassToSquareInterval = setInterval(takeRandomSquare, 100);
+
+    function takeRandomSquare(){
+        if(lstMinesTmp.length === 0){
+            clearInterval(addClassToSquareInterval);
+            return;
+        }
+
+
+        const index = Math.round(Math.random() * lstMinesTmp.length);
+        addClassFlawlessToSquare(lstMinesTmp[index]);
+        lstMinesTmp.splice(index, 1);
+    };
+}
 
 function canSquareRemoveFlag(element) {
     if (element === null || !element.classList.contains("bombSquare") || element.classList.contains("show"))
@@ -202,7 +221,6 @@ function canSquareRemoveFlag(element) {
             gameLogic.removeFlag(x, y);
             pFlagsPossibles.innerHTML = gameLogic.flagsPossibleInField;
             element.innerHTML = "?";
-
 
             return true;
         } else if (!gameLogic.canRevealSquare(x, y))
@@ -250,9 +268,9 @@ function revealBombSquare(element) {
 
             if (gameLogic.bombsExploded === 1)
                 divPopOff.classList.add("show");
-
             break;
         case 0:
+            color = "#ccc";
             element.innerHTML = " ";
             break;
         case 1:
@@ -323,19 +341,15 @@ function appendBombs() {
                     return;
 
                 const id = e.target.id;
-                // const x = id.substring(5, id.lastIndexOf("-"));
                 const x = e.target.x;
-                // const y = id.substring(id.lastIndexOf("-") + 1);
                 const y = e.target.y;
+                // const x = id.substring(5, id.lastIndexOf("-"));
+                // const y = id.substring(id.lastIndexOf("-") + 1);
 
                 switch (e.which) {
                     case 1:
-
-                        if (gameLogic.isFirstReveal){
+                        if (gameLogic.isFirstReveal)
                             gameLogic.setFirstRevealOfBombs(x, y);
-                            pFlagsPossibles.innerHTML = gameLogic.flagsPossibleInField;
-
-                        }
 
                         revealBombSquare(e.target);
                         break;
@@ -354,14 +368,12 @@ function appendBombs() {
                     default:
                         return;
                 }
-
-
                 // Add smth
+
             });
 
             trElement_tmp.append(pElement_tmp);
             msGameContainer.append(trElement_tmp);
-
         }
     }
 }
@@ -370,9 +382,9 @@ btnCreateMinesList.addEventListener("click", (e) => {
     gameLogic.restartGame();
     gameLogic.initMineList(numberRows.value, numberColumns.value);
     appendBombs();
+    gameLogic.funFlawless = flawlessVictoryAnimation;
     pFlagsPossibles.innerHTML = gameLogic.flagsPossibleInField;
     pBombsExploded.innerHTML = gameLogic.bombsExploded;
-
 });
 
 numberColumns.addEventListener("change", (e) => {
@@ -385,10 +397,6 @@ numberRows.addEventListener("change", (e) => {
         numberRows.value = "8";
 });
 
-function removePopOff() {
-    divPopOff.classList.remove("show");
-}
-
 function showAllGame() {
     if (!gameLogic.isGameOver)
         return;
@@ -396,13 +404,11 @@ function showAllGame() {
     for (let i = 0; i < gameLogic.getMaxRows(); i++)
         for (let j = 0; j < gameLogic.getMaxColumns(); j++)
             revealBombSquare(document.getElementById("bomb-" + ((i).toString() + "-" + (j).toString())));
-
 }
 
-btnContinue.addEventListener("click", e => {
-    removePopOff();
-});
+function removePopOff() { divPopOff.classList.remove("show"); }
 
+btnContinue.addEventListener("click", removePopOff);
 btnEndGame.addEventListener("click", e => {
     gameLogic.isGameOver = true;
     removePopOff();

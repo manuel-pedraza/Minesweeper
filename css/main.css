@@ -8,7 +8,7 @@
     text-align: center;
 }
 
-label{
+label {
     margin: 0;
     text-align: center;
 }
@@ -19,11 +19,11 @@ input {
     color: black
 }
 
-form div{
+form div {
     margin: 6px 0;
 }
 
-.msGameContainer tr p{
+.msGameContainer tr p {
     margin: 0;
     font-size: 1.6em;
     background-color: #aaa;
@@ -41,7 +41,40 @@ form div{
     cursor: pointer;
 }
 
-.msGameContainer tr p.show  {
+@keyframes flawless {
+    0% {
+        background-color: #aaa;
+    }
+
+    100% {
+        background-color: currentColor;
+    }
+}
+
+@keyframes show-flawless {
+    0% {
+        background-color: #ccc;
+    }
+
+    100% {
+        background-color: currentColor;
+        
+    }
+}
+
+.msGameContainer tr p.flawless {
+    cursor: default;
+    animation: flawless 1.5s;
+    animation-fill-mode: forwards;
+}
+
+.msGameContainer tr p.show.flawless {
+    cursor: default;
+    animation: show-flawless 1.5s;
+    animation-fill-mode: forwards;
+}
+
+.msGameContainer tr p.show {
     background-color: #ccc;
     border: medium solid #222;
     font-weight: bold;
@@ -59,12 +92,12 @@ form div{
     color: #fff;
 }
 
-.p-show-infos{
+.p-show-infos {
     font-size: 2em;
     display: inline-block;
 }
 
-#game-state-pop-off{
+#game-state-pop-off {
     position: absolute;
     vertical-align: middle;
     align-items: center;
@@ -72,7 +105,7 @@ form div{
     text-align: center;
     display: none;
     height: 100vh;
-        width: 100vw;
+    width: 100vw;
     background-color: rgba(50, 50, 50, 0.8);
     z-index: 10;
 }
@@ -82,7 +115,7 @@ form div{
 }
 
 
-#box-container{
+#box-container {
     position: inherit;
     background-color: white;
     border-radius: 3%;
@@ -93,7 +126,7 @@ form div{
     align-items: center;
     align-content: center;
     text-align: center;
-    
+
 }
 
 #text-info {
@@ -103,7 +136,7 @@ form div{
 }
 
 @media screen and (max-width: 900px) {
-    #box-container{
+    #box-container {
         left: 10vw;
         width: 80vw;
     }

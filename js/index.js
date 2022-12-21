@@ -48,7 +48,6 @@ class msGameLogic {
             this.bombsFlaged++;
 
         this.flagsPossibleInField--;
-
         this.validateIfGameHasEnded();
     }
 
@@ -158,7 +157,6 @@ class msGameLogic {
                 if (this.lstMines[x + i][y + j] === false)
                     numberOfBombs++;
             }
-
         this.lstMines[x][y] = numberOfBombs;
     }
 
@@ -169,10 +167,9 @@ class msGameLogic {
             this.isFlawlessVictory = false;
             this.flagsPossibleInField--;
 
-        } else {
+        } else 
             this.noBombZonesToDiscover--;
-        }
-
+        
         this.validateIfGameHasEnded();
         return this.lstMines[x][y];
     }
@@ -203,7 +200,6 @@ function flawlessVictoryAnimation() {
             return;
         }
 
-
         const index = Math.round(Math.random() * lstMinesTmp.length);
         addClassFlawlessToSquare(lstMinesTmp[index]);
         lstMinesTmp.splice(index, 1);
@@ -230,7 +226,6 @@ function canSquareRemoveFlag(element) {
 }
 
 function recRevealBombSquare(x, y) {
-
     if (gameLogic.canRevealSquare(x, y)) {
         const element = document.getElementById("bomb-" + ((x).toString() + "-" + (y).toString()));
         canSquareRemoveFlag(element);
@@ -241,13 +236,11 @@ function recRevealBombSquare(x, y) {
 }
 
 function revealBombSquare(element) {
-
     if (element === null || !element.classList.contains("bombSquare") || element.classList.contains("show") ||
         canSquareRemoveFlag(element) === false)
         return;
 
     const x = element.x, y = element.y;
-
     gameLogic.setNumberSquare(x, y);
 
     if (gameLogic.isGameOver === true && !gameLogic.canRevealSquare(x, y)) {
@@ -298,6 +291,7 @@ function revealBombSquare(element) {
             color = "#222"
             break;
         default:
+            color = "#aaa";
             break;
     }
 
@@ -315,7 +309,6 @@ function revealBombSquare(element) {
                     continue;
 
                 recRevealBombSquare(x + i, y + j);
-
             }
     }
 }
@@ -343,8 +336,6 @@ function appendBombs() {
                 const id = e.target.id;
                 const x = e.target.x;
                 const y = e.target.y;
-                // const x = id.substring(5, id.lastIndexOf("-"));
-                // const y = id.substring(id.lastIndexOf("-") + 1);
 
                 switch (e.which) {
                     case 1:
@@ -368,8 +359,6 @@ function appendBombs() {
                     default:
                         return;
                 }
-                // Add smth
-
             });
 
             trElement_tmp.append(pElement_tmp);

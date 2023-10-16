@@ -1,0 +1,143 @@
+.msMainContainer {
+    background-color: #333;
+    height: 100vh;
+}
+
+* {
+    color: #fff;
+    text-align: center;
+}
+
+label {
+    margin: 0;
+    text-align: center;
+}
+
+input {
+    width: 100%;
+    height: 100%;
+    color: black
+}
+
+form div {
+    margin: 6px 0;
+}
+
+.msGameContainer tr p {
+    margin: 0;
+    font-size: 1.6em;
+    background-color: #aaa;
+    color: #000;
+    border: medium solid #000;
+    font-weight: bold;
+    height: 40px;
+    width: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    text-align: "center";
+    vertical-align: "middle";
+    display: table-cell;
+    z-index: 1;
+    cursor: pointer;
+}
+
+@keyframes flawless {
+    0% {
+        background-color: #aaa;
+    }
+
+    100% {
+        background-color: currentColor;
+    }
+}
+
+@keyframes show-flawless {
+    0% {
+        background-color: #ccc;
+    }
+
+    100% {
+        background-color: currentColor;
+        
+    }
+}
+
+.msGameContainer tr p.flawless {
+    cursor: default;
+    animation: flawless 1.5s;
+    animation-fill-mode: forwards;
+}
+
+.msGameContainer tr p.show.flawless {
+    cursor: default;
+    animation: show-flawless 1.5s;
+    animation-fill-mode: forwards;
+}
+
+.msGameContainer tr p.show {
+    background-color: #ccc;
+    border: medium solid #222;
+    font-weight: bold;
+    cursor: default;
+}
+
+.msGameContainer tr p.show:hover {
+    background-color: #444;
+    border: medium solid #222;
+    font-weight: bold;
+}
+
+.msGameContainer tr p:hover {
+    background-color: #444;
+    color: #fff;
+}
+
+.p-show-infos {
+    font-size: 2em;
+    display: inline-block;
+}
+
+#game-state-pop-off {
+    position: absolute;
+    vertical-align: middle;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    display: none;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(50, 50, 50, 0.8);
+    z-index: 10;
+}
+
+#game-state-pop-off.show {
+    display: flex;
+}
+
+
+#box-container {
+    position: inherit;
+    background-color: white;
+    border-radius: 3%;
+    left: 30vw;
+    height: 30vh;
+    width: 40vw;
+    vertical-align: middle;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+
+}
+
+#text-info {
+    margin: 10vh 0 2vh 0;
+    color: #000;
+    font-weight: bold;
+}
+
+@media screen and (max-width: 900px) {
+    #box-container {
+        left: 10vw;
+        width: 80vw;
+    }
+}

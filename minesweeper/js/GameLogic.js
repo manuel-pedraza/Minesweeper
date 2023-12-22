@@ -47,10 +47,10 @@ class GameLogic {
             this.lstMines.push([]);
 
             for (let j = 0; j < y; j++) {
-                let isBomb = Math.round(Math.random() * 100) < 80;
-                this.lstMines[i].push(isBomb);
+                let isNotABomb = Math.round(Math.random() * 100) < 80;
+                this.lstMines[i].push(isNotABomb);
 
-                if (isBomb)
+                if (isNotABomb)
                     this.noBombZonesToDiscover++;
                 else
                     this.totalNumberOfBombs++;

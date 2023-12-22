@@ -68,7 +68,6 @@ function canSquareRemoveFlag(element) {
 function recRevealBombSquare(x, y) {
     if (gameLogic.canRevealSquare(x, y)) {
         const element = document.getElementById("bomb-" + ((x).toString() + "-" + (y).toString()));
-        canSquareRemoveFlag(element);
         revealBombSquare(element);
     }
     else

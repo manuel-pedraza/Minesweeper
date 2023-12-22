@@ -26,11 +26,11 @@ function flawlessVictoryAnimation() {
     let lstMinesTmp = [];
 
     for (let i = 0; i < gameLogic.getMaxRows(); i++)
-        for (let j = 0; j < gameLogic.getMaxColumns(); j++)
-            if (gameLogic.lstMines[i][j] === false || gameLogic.lstMines[i][j] === true)
-                continue;
-            else
+        for (let j = 0; j < gameLogic.getMaxColumns(); j++) 
+            if (!(gameLogic.lstMines[i][j] === false || gameLogic.lstMines[i][j] === true || gameLogic.lstMines[i][j] === 0))
                 lstMinesTmp.push({ x: i, y: j });
+            
+
 
     let addClassToSquareInterval = setInterval(takeRandomSquare, 100);
 
@@ -40,29 +40,10 @@ function flawlessVictoryAnimation() {
             return;
         }
 
-        const index = Math.round(Math.random() * lstMinesTmp.length);
+        const index = Math.round(Math.random() * (lstMinesTmp.length - 1));
         addClassFlawlessToSquare(lstMinesTmp[index]);
         lstMinesTmp.splice(index, 1);
     };
-}
-
-function canSquareRemoveFlag(element) {
-    if (element === null || !element.classList.contains("bombSquare") || element.classList.contains("show"))
-        return undefined;
-
-    const x = element.x, y = element.y;
-
-    if (element.innerHTML === "🚩") {
-        if (gameLogic.canRevealSquare(x, y)) {
-            gameLogic.removeFlag(x, y);
-            pFlagsPossibles.innerHTML = gameLogic.flagsPossibleInField;
-            element.innerHTML = "?";
-
-            return true;
-        } else if (!gameLogic.canRevealSquare(x, y))
-            return false;
-    } else
-        return undefined;
 }
 
 function recRevealBombSquare(x, y) {
@@ -75,8 +56,7 @@ function recRevealBombSquare(x, y) {
 }
 
 function revealBombSquare(element) {
-    if (element === null || !element.classList.contains("bombSquare") || element.classList.contains("show") ||
-        canSquareRemoveFlag(element) === false)
+    if (element === null || !element.classList.contains("bombSquare") || element.classList.contains("show") || element.innerHTML === "🚩")
         return;
 
     const x = element.x, y = element.y;

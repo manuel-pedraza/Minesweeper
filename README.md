@@ -19,7 +19,7 @@ I started this little project to create a very minesweeper so everyone can play 
     2. Open the `minesweeper` directory and click the `index.html` file.
     3. Enjoy the game.
 
-## Win annimation
+## Victory animation
 
 https://github.com/maxions100/Minesweeper/assets/33945493/6829cebe-4817-4511-bcc1-f506c6643507
 

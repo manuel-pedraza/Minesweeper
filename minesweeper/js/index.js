@@ -58,13 +58,14 @@ function revealBombSquare(element) {
         return;
 
     const x = element.x, y = element.y;
-    gameLogic.setNumberSquare(x, y);
-
+    
+    // When the game is over, show all the remaining bombs
     if (gameLogic.isGameOver === true && !gameLogic.canRevealSquare(x, y)) {
         element.innerHTML = "💣";
         return;
     }
-
+    
+    gameLogic.setNumberSquare(x, y);
     const squareValue = gameLogic.validateSquare(x, y);
 
     let color = "";

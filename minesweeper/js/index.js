@@ -30,8 +30,6 @@ function flawlessVictoryAnimation() {
             if (!(gameLogic.lstMines[i][j] === false || gameLogic.lstMines[i][j] === true || gameLogic.lstMines[i][j] === 0))
                 lstMinesTmp.push({ x: i, y: j });
             
-
-
     let addClassToSquareInterval = setInterval(takeRandomSquare, 100);
 
     function takeRandomSquare() {

@@ -14,9 +14,16 @@ I started this little project to create a very minesweeper so everyone can play 
     2. Unzip the `minesweeper.zip` file.
     3. Open the directory and click the `index.html` file.
     4. Enjoy the game.
-* Copy the repository
+* Cloning the repository
     1. Clone this repository.
     2. Open the `minesweeper` directory and click the `index.html` file.
     3. Enjoy the game.
 
-<!-- FLAWLESS WIN GIF MAYBE? -->
+<!-- FLAWLESS WIN ![](my_video.mov)-->
+
+## Victory animation
+<video width="720" height="480" controls>
+  <source src="https://manuel-pedraza.dev/ms-win-animation.mp4" type="video/mp4">
+</video>
+
+

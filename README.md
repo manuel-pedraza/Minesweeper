@@ -21,5 +21,5 @@ I started this little project to create a very minesweeper so everyone can play 
 
 ## Win annimation
 
-![Victory Animation](https://manuel-pedraza.dev/ms-win-animation.mp4)
+https://github.com/maxions100/Minesweeper/assets/33945493/6829cebe-4817-4511-bcc1-f506c6643507
 

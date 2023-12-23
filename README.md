@@ -9,7 +9,7 @@
 I started this little project to create a very minesweeper so everyone can play it. I wanted to make it very basic and minimalistic to play.
 
 ## How to play 
-* Downloading the `.zip` file
+* [Downloading the `.zip` file](https://www.dropbox.com/scl/fi/hi4e39f18a9ct1855oi9r/minesweeper.zip?rlkey=ji588bmk702rk5bpkr4ov2hab&dl=1) 
     1. Download the `minesweeper.zip` file.
     2. Unzip the `minesweeper.zip` file.
     3. Open the directory and click the `index.html` file.
@@ -19,11 +19,7 @@ I started this little project to create a very minesweeper so everyone can play 
     2. Open the `minesweeper` directory and click the `index.html` file.
     3. Enjoy the game.
 
-<!-- FLAWLESS WIN ![](my_video.mov)-->
+## Win annimation
 
-## Victory animation
-<video width="720" height="480" controls>
-  <source src="https://manuel-pedraza.dev/ms-win-animation.mp4" type="video/mp4">
-</video>
-
+![Victory Animation](https://manuel-pedraza.dev/ms-win-animation.mp4)
 
